@@ -1,9 +1,7 @@
 local M = {}
 local config = require("quarkus.config")
 local vscode = require("quarkus.vscode")
-local bind = require("quarkus.bind")
 local util = require("quarkus.util")
-local jdtls = require("quarkus.jdtls")
 
 local root_dir = function()
   return vim.loop.cwd()
@@ -13,10 +11,7 @@ local qutels_path = function()
   if config.ls_path then
     return config.ls_path
   end
-  local qls = vscode.find_one("/redhat.vscode-quarkus-*/server")
-  if qls then
-    return qls
-  end
+  return vscode.find_one("/redhat.vscode-quarkus-*/server")
 end
 
 local function qute_ls_cmd(java_cmd)
@@ -70,7 +65,7 @@ local ls_config = {
   end,
 }
 
----@param opts vim.lsp.ClientConfig
+---@param opts table<string, any>
 M.setup = function(opts)
   ls_config = vim.tbl_deep_extend("keep", ls_config, opts)
   local capabilities = ls_config.capabilities or vim.lsp.protocol.make_client_capabilities()
@@ -90,19 +85,11 @@ M.setup = function(opts)
   if not ls_config.root_dir then
     ls_config.root_dir = root_dir()
   end
-  ls_config.cmd = (ls_config.cmd and #ls_config.cmd > 0) and ls_config.cmd or qute_ls_cmd(config.java_cmd)
+  ls_config.cmd = (ls_config.cmd and #ls_config.cmd > 0) and ls_config.cmd or qute_ls_cmd(config.java_bin)
   if not ls_config.cmd then
     return
   end
   ls_config.init_options.workspaceFolders = ls_config.root_dir
-  local on_init = ls_config.on_init
-  ls_config.on_init = function(client, ctx)
-    jdtls.init_config()
-    bind.bind_qute_all_request(client)
-    if on_init then
-      on_init(client, ctx)
-    end
-  end
   local group = vim.api.nvim_create_augroup("qute_ls", { clear = true })
   vim.api.nvim_create_autocmd({ "FileType" }, {
     group = group,

@@ -1,10 +1,37 @@
 local M = {}
 local jdtls = require("quarkus.jdtls")
+local util = require("quarkus.util")
 
 local bind_qute_request = function(client, command)
   client.handlers[command] = function(_, result)
     return jdtls.execute_command(command, result)
   end
+end
+
+M._bind = false
+M._bind_count = 0
+
+local function defer_bind(ms)
+  if M._bind_count > 10 then
+    vim.notify("Failed to bind qute requests", vim.log.levels.ERROR)
+  end
+  M._bind_count = M._bind_count + 1
+  vim.defer_fn(function()
+    M.try_bind_qute_all_request()
+  end, ms)
+end
+M.try_bind_qute_all_request = function()
+  if M._bind then
+    return
+  end
+  M._bind = true
+
+  local client = util.get_qute_ls_client()
+  if client == nil then
+    defer_bind(500)
+    return
+  end
+  M.bind_qute_all_request(client)
 end
 
 M.bind_qute_all_request = function(client)
