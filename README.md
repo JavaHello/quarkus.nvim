@@ -4,6 +4,8 @@
 
 参考 [Quarkus](https://github.com/redhat-developer/vscode-quarkus) 插件, 将它的部分功能集成到 `Neovim` 中。
 
+[![asciicast](https://asciinema.org/a/8707wkagSgj2t1rQuonplGuv0.svg)](https://asciinema.org/a/8707wkagSgj2t1rQuonplGuv0)
+
 ## 安装
 
 - `lazy.nvim`
