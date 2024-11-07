@@ -24,7 +24,6 @@ M.try_bind_qute_all_request = function()
   if M._bind then
     return
   end
-  M._bind = true
 
   local client = util.get_qute_ls_client()
   if client == nil then
@@ -32,6 +31,7 @@ M.try_bind_qute_all_request = function()
     return
   end
   M.bind_qute_all_request(client)
+  M._bind = true
 end
 
 M.bind_qute_all_request = function(client)
