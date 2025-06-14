@@ -36,37 +36,36 @@ local function qute_ls_cmd(java_cmd)
   return cmd
 end
 
-local ls_config = {
-  name = "qute_ls",
-  filetypes = { "java", "yaml", "jproperties", "html" },
-  init_options = {},
-  settings = {
-    qute_ls = {
-      validation = { enabled = true },
+M.lsp_config = function(opts)
+  local ls_config = {
+    name = "qute_ls",
+    filetypes = { "java", "yaml", "jproperties", "html" },
+    init_options = {},
+    settings = {
+      qute_ls = {
+        validation = { enabled = true },
+      },
     },
-  },
-  handlers = {},
-  commands = {},
-  get_language_id = function(bufnr, filetype)
-    if filetype == "yaml" then
-      local filename = vim.api.nvim_buf_get_name(bufnr)
-      if util.is_application_yml_file(filename) then
-        return "qute-yaml"
+    handlers = {},
+    commands = {},
+    get_language_id = function(bufnr, filetype)
+      if filetype == "yaml" then
+        local filename = vim.api.nvim_buf_get_name(bufnr)
+        if util.is_application_yml_file(filename) then
+          return "qute-yaml"
+        end
+      elseif filetype == "jproperties" then
+        local filename = vim.api.nvim_buf_get_name(bufnr)
+        if util.is_application_properties_file(filename) then
+          return "quarkus-properties"
+        end
+      elseif filetype == "html" then
+        return "qute-html"
       end
-    elseif filetype == "jproperties" then
-      local filename = vim.api.nvim_buf_get_name(bufnr)
-      if util.is_application_properties_file(filename) then
-        return "quarkus-properties"
-      end
-    elseif filetype == "html" then
-      return "qute-html"
-    end
-    return filetype
-  end,
-}
+      return filetype
+    end,
+  }
 
----@param opts table<string, any>
-M.setup = function(opts)
   ls_config = vim.tbl_deep_extend("keep", ls_config, opts)
   local capabilities = ls_config.capabilities or vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_deep_extend("keep", capabilities, {
@@ -90,6 +89,12 @@ M.setup = function(opts)
     return
   end
   ls_config.init_options.workspaceFolders = ls_config.root_dir
+  return ls_config
+end
+
+---@param opts table<string, any>
+M.setup = function(opts)
+  local ls_config = M.lsp_config(opts)
   local group = vim.api.nvim_create_augroup("qute_ls", { clear = true })
   vim.api.nvim_create_autocmd({ "FileType" }, {
     group = group,

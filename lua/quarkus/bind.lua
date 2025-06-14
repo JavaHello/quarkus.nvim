@@ -14,6 +14,7 @@ M._bind_count = 0
 local function defer_bind(ms)
   if M._bind_count > 10 then
     vim.notify("Failed to bind qute requests", vim.log.levels.ERROR)
+    return
   end
   M._bind_count = M._bind_count + 1
   vim.defer_fn(function()
