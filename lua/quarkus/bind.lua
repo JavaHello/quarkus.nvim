@@ -47,6 +47,10 @@ M.bind_qute_all_request = function(client)
   bind_qute_request(client, "qute/java/codeLens")
   bind_qute_request(client, "qute/java/diagnostics")
   bind_qute_request(client, "qute/java/documentLink")
+
+  vim.lsp.commands["qute/dataModelChanged"] = function(event)
+    return client.notify("qute/dataModelChanged", event)
+  end
 end
 
 return M
