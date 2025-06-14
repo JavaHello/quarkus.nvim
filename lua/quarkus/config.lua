@@ -22,7 +22,10 @@ local M = {
 ---@param opts quarkus.Config
 ---@diagnostic disable-next-line: inject-field
 M._init = function(opts)
-  M = vim.tbl_deep_extend("keep", opts, M)
+  M.ls_path = opts.ls_path or M.ls_path
+  M.java_bin = opts.java_bin or M.java_bin
+  M.jdt_extensions_path = opts.jdt_extensions_path or M.jdt_extensions_path
+  M.microprofile_ext_path = opts.microprofile_ext_path or M.microprofile_ext_path
 end
 
 return M
