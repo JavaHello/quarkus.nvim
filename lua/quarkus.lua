@@ -3,8 +3,22 @@ local M = {}
 M.addMicroprofileJar = function(jar)
   local ok, microprofile = pcall(require, "microprofile")
   if ok then
-    local microprofile_path = jar
-      or require("quarkus.vscode").find_one("/redhat.vscode-quarkus-*/server/com.redhat.quarkus.ls.jar")
+    local microprofile_path
+    if jar then
+      if vim.endswith(jar, ".jar") then
+        microprofile_path = jar
+      else
+        local microprofile_jar = vim.fn.glob(jar .. "/com.redhat.quarkus.ls.jar")
+        if microprofile_jar ~= "" then
+          microprofile_path = microprofile_jar
+        else
+          vim.notify("No MicroProfile JAR found in " .. jar, vim.log.levels.WARN)
+        end
+      end
+    else
+      microprofile_path =
+        require("quarkus.vscode").find_one("/redhat.vscode-quarkus-*/server/com.redhat.quarkus.ls.jar")
+    end
     if microprofile_path then
       microprofile.addMicroprofileJar(microprofile_path)
     end
