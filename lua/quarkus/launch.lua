@@ -1,5 +1,4 @@
 local M = {}
-local config = require("quarkus.config")
 local vscode = require("quarkus.vscode")
 local util = require("quarkus.util")
 
@@ -8,6 +7,7 @@ local root_dir = function()
 end
 
 local qutels_path = function()
+  local config = require("quarkus.config")
   if config.ls_path then
     return config.ls_path
   end
@@ -37,6 +37,7 @@ local function qute_ls_cmd(java_cmd)
 end
 
 M.lsp_config = function(opts)
+  local config = require("quarkus.config")
   local ls_config = {
     name = "qute_ls",
     filetypes = { "java", "yaml", "jproperties", "html" },
