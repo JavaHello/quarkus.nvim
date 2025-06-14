@@ -14,7 +14,7 @@ end
 ---@param opts quarkus.Config
 M.setup = function(opts)
   require("quarkus.config")._init(opts)
-  M.addMicroprofileJar(opts.microprofile_jars)
+  M.addMicroprofileJar(opts.microprofile_ext_path)
 end
 
 M.java_extensions = function()

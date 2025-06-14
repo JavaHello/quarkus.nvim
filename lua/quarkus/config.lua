@@ -4,7 +4,7 @@
 ---@field java_bin? string The path to the java command.
 ---@field jdt_extensions_path? string The path to the JDT extensions.
 ---@field jdt_extensions_jars string[] The list of JDT extensions jars.
----@field microprofile_jars? string[] The path to the microprofile jars.
+---@field microprofile_ext_path? string[] The path to the microprofile jars.
 
 ---@type quarkus.Config
 local M = {
@@ -16,7 +16,7 @@ local M = {
     "com.redhat.microprofile.jdt.quarkus.jar",
     "com.redhat.qute.jdt.jar",
   },
-  microprofile_jars = nil,
+  microprofile_ext_path = nil,
 }
 
 ---@param opts quarkus.Config
